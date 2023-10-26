@@ -9,6 +9,7 @@ var cors = require('cors');
 AppDataSource.initialize().then(async () => {
 // fork test işlemi -- test işlemi -- ikinci test işlemi
     // create express app
+    // hello world
     const app = express()
     app.use(bodyParser.json())
     app.use(cors({
