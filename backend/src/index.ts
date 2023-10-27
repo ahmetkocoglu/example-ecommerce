@@ -4,10 +4,11 @@ import { Request, Response } from "express"
 import { AppDataSource } from "./data-source"
 import { Routes } from "./routes"
 import { User } from "./entity/User"
+import { Product } from "./entity/Product"
 var cors = require('cors');
 
 AppDataSource.initialize().then(async () => {
-// fork test işlemi -- test işlemi -- ikinci test işlemi
+// fork test işlemi test işlemi -- ikinci test işlemi
     // create express app
     // hello world
 
@@ -57,6 +58,19 @@ AppDataSource.initialize().then(async () => {
             lastName: "Assassin"
         })
     )
+
+    const urn =  [1,2,3,4,5,6,7,8,9,10]
+    for(let item of urn){
+        await AppDataSource.manager.save(
+            AppDataSource.manager.create(Product, {
+                id: item,
+                title: "Ürün " + item,
+                seo: "urun-" + item,
+                price: 100,
+                discountPrice: 90
+            })
+        )
+    }
 
     console.log("Express server has started on port 3040. Open http://localhost:3040/users to see results")
 

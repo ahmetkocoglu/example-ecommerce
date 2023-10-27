@@ -1,3 +1,5 @@
+import { MovementController } from "./controller/MovementController"
+import { ProductController } from "./controller/ProductController"
 import { UserController } from "./controller/UserController"
 
 export const Routes = [{
@@ -30,4 +32,14 @@ export const Routes = [{
     route: "/users/:id",
     controller: UserController,
     action: "one"
+}, {
+    method: "get",
+    route: "/products",
+    controller: ProductController,
+    action: "all"
+}, {
+    method: "post",
+    route: "/add-movement",
+    controller: MovementController,
+    action: "addMovement"
 }]
