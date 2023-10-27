@@ -26,7 +26,7 @@ export default function Home() {
   useEffect(() => {
     if (token !== "") me();
   }, [token]);
-  
+
   useEffect(() => {
     axios
       .get("http://localhost:3040/products")
@@ -51,17 +51,19 @@ export default function Home() {
       });
   };
 
-  const handleAddProduct = (k: any) =>{
-    axios.defaults.baseURL = "http://localhost:3040/";
-    axios
-      .post("add-movement", k)
-      .then((response) => {
-        setUser(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  } 
+  const handleAddProduct = (k: any) => {
+    if (k.quantity) {
+      axios.defaults.baseURL = "http://localhost:3040/";
+      axios
+        .post("add-movement", { product_id: k.id, quantity: k.quantity })
+        .then((response) => {
+          setUser(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center p-5 bg-white">
@@ -90,10 +92,21 @@ export default function Home() {
           </div>
         </>
       )}
-      <hr className="my-2 border border-red-900 w-full"/>
+      <hr className="my-2 border border-red-900 w-full" />
       <div className="text-black">
-        {products.map((k: any, index: number) =>  {
-          return <div key={index}>{k.title} {k.price} <button onClick={() => handleAddProduct(k)}>ekle</button></div>
+        {products.map((k: any, index: number) => {
+          return (
+            <div key={index}>
+              {k.title} {k.price}
+              <input
+                type="number"
+                placeholder="quantity"
+                onChange={(e: any) => (k.quantity = e.target.value)}
+                className="text-black border border-gray-600"
+              />
+              <button onClick={() => handleAddProduct(k)}>ekle</button>
+            </div>
+          );
         })}
       </div>
     </main>
