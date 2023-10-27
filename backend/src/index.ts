@@ -10,6 +10,8 @@ AppDataSource.initialize().then(async () => {
 // fork test işlemi -- test işlemi -- ikinci test işlemi
     // create express app
     // hello world
+
+    //hello world test 2 
     const app = express()
     app.use(bodyParser.json())
     app.use(cors({
