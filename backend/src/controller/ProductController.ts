@@ -20,7 +20,7 @@ export class ProductController {
         await this.productRepository.update(
             { id: id },
             {
-                is_delete: true
+                is_delete: !productToRemove.is_delete
             }
         );
 

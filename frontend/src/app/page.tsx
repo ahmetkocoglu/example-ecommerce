@@ -6,6 +6,8 @@ import { List } from "postcss/lib/list";
 import { log } from "console";
 
 export default function Home() {
+  const [isDeleted, setIsDeleted] = useState(true);
+  const [isDeletedLoading, setIsDeletedLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
@@ -66,23 +68,26 @@ export default function Home() {
   };
 
   const handleDeleteProduct = (k: any) => {
+    setIsDeletedLoading(true);
     axios.defaults.baseURL = "http://localhost:3040/";
-      axios
-        .delete("product/" + k.id)
-        .then((response) => {
-          setUser(response.data);
-          
-          const editProducts = products.map((t: any) => {
-            if(t.id === k.id) t.is_delete = true
-            return t;
-          })
+    axios
+      .delete("product/" + k.id)
+      .then((response) => {
+        setTimeout(() => {
+          setIsDeletedLoading(false);
 
-          setProducts(editProducts)
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-  }
+          const editProducts = products.map((t: any) => {
+            if (t.id === k.id) t.is_delete = !t.is_delete;
+            return t;
+          });
+  
+          setProducts(editProducts);
+        }, 2000)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center p-5 bg-white">
@@ -112,22 +117,37 @@ export default function Home() {
         </>
       )}
       <hr className="my-2 border border-red-900 w-full" />
+      <button
+        onClick={() => setIsDeleted(!isDeleted)}
+        className="m-1 text-black"
+      >
+        arşiv ürünlerini {isDeleted ? "gizle" : "göster"}
+      </button>
       <div className="text-black">
-        {products.filter((k: any) => k.is_delete !== true).map((k: any, index: number) => {
-          return (
-            <div key={index}>
-              {k.title} {k.price}
-              <input
-                type="number"
-                placeholder="quantity"
-                onChange={(e: any) => (k.quantity = e.target.value)}
-                className="text-black border border-gray-600"
-              />
-              <button onClick={() => handleAddProduct(k)} className="m-1">ekle</button>
-              <button onClick={() => handleDeleteProduct(k)} className="m-1">sil</button>
-            </div>
-          );
-        })}
+        {isDeletedLoading && "işleminiz yapılıyor"}
+      </div>
+      <div className="text-black">
+        {products
+          .filter((k: any) => k.is_delete === isDeleted)
+          .map((k: any, index: number) => {
+            return (
+              <div key={index}>
+                {k.title} {k.price}
+                <input
+                  type="number"
+                  placeholder="quantity"
+                  onChange={(e: any) => (k.quantity = e.target.value)}
+                  className="text-black border border-gray-600"
+                />
+                <button onClick={() => handleAddProduct(k)} className="m-1">
+                  ekle
+                </button>
+                <button onClick={() => handleDeleteProduct(k)} className="m-1">
+                  {isDeleted ? "arşivden çıkart" : "arşive gönder"}
+                </button>
+              </div>
+            );
+          })}
       </div>
     </main>
   );
