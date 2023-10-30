@@ -67,7 +67,8 @@ AppDataSource.initialize().then(async () => {
                 title: "Ürün " + item,
                 seo: "urun-" + item,
                 price: 100,
-                discountPrice: 90
+                discountPrice: 90,
+                is_delete: false
             })
         )
     }

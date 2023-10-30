@@ -71,6 +71,13 @@ export default function Home() {
         .delete("product/" + k.id)
         .then((response) => {
           setUser(response.data);
+          
+          const editProducts = products.map((t: any) => {
+            if(t.id === k.id) t.is_delete = true
+            return t;
+          })
+
+          setProducts(editProducts)
         })
         .catch((error) => {
           console.log(error);
@@ -106,7 +113,7 @@ export default function Home() {
       )}
       <hr className="my-2 border border-red-900 w-full" />
       <div className="text-black">
-        {products.map((k: any, index: number) => {
+        {products.filter((k: any) => k.is_delete !== true).map((k: any, index: number) => {
           return (
             <div key={index}>
               {k.title} {k.price}

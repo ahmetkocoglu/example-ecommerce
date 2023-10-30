@@ -16,7 +16,13 @@ export class ProductController {
        
         if(!productToRemove) return "this product not exist"
         
-        await this.productRepository.remove(productToRemove)
+        //await this.productRepository.remove(productToRemove)
+        await this.productRepository.update(
+            { id: id },
+            {
+                is_delete: true
+            }
+        );
 
         return "product has been removed";
     }
