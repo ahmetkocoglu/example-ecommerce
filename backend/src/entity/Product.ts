@@ -18,4 +18,7 @@ export class Product {
 
     @Column('decimal', { precision: 6, scale: 2 })
     discountPrice!: number
+
+    @Column()
+    is_delete: boolean
 }

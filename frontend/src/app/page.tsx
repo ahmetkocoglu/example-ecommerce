@@ -65,6 +65,18 @@ export default function Home() {
     }
   };
 
+  const handleDeleteProduct = (k: any) => {
+    axios.defaults.baseURL = "http://localhost:3040/";
+      axios
+        .delete("product/" + k.id)
+        .then((response) => {
+          setUser(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center p-5 bg-white">
       {token === "" ? (
@@ -104,7 +116,8 @@ export default function Home() {
                 onChange={(e: any) => (k.quantity = e.target.value)}
                 className="text-black border border-gray-600"
               />
-              <button onClick={() => handleAddProduct(k)}>ekle</button>
+              <button onClick={() => handleAddProduct(k)} className="m-1">ekle</button>
+              <button onClick={() => handleDeleteProduct(k)} className="m-1">sil</button>
             </div>
           );
         })}

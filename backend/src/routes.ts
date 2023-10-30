@@ -38,6 +38,11 @@ export const Routes = [{
     controller: ProductController,
     action: "all"
 }, {
+    method: "delete",
+    route: "/product/:id",
+    controller: ProductController,
+    action: "deleteProduct"
+}, {
     method: "post",
     route: "/add-movement",
     controller: MovementController,
