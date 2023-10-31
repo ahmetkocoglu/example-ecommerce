@@ -1,20 +1,27 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { List } from "postcss/lib/list";
-import { log } from "console";
+//import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
+//import {login} from "@/store/apps/login";
 
 export default function Home() {
-  const [isDeleted, setIsDeleted] = useState(true);
+  // ** Redux
+  //const dispatch = useDispatch<AppDispatch>()
+
+  const [isDeleted, setIsDeleted] = useState(false);
   const [isDeletedLoading, setIsDeletedLoading] = useState(false);
+  const [isAddBasketLoading, setIsAddBasketLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
   const [user, setUser] = useState<any>({});
   const [products, setProducts] = useState<any>([]);
+  const [movements, setMovements] = useState<any>([]);
 
   const handleLogin = () => {
+    //dispatch(login({email:email, password:password}))
     axios
       .post("http://localhost:3040/users/login", { email, password })
       .then((response: any) => {
@@ -38,6 +45,14 @@ export default function Home() {
       .catch((error) => {
         console.log(error);
       });
+      axios
+        .get("http://localhost:3040/movements")
+        .then((response: any) => {
+          setMovements(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   }, []);
 
   const me = () => {
@@ -53,13 +68,17 @@ export default function Home() {
       });
   };
 
-  const handleAddProduct = (k: any) => {
+  const handleAddBasketProduct = (k: any) => {
     if (k.quantity) {
+      setIsAddBasketLoading(true);
       axios.defaults.baseURL = "http://localhost:3040/";
       axios
         .post("add-movement", { product_id: k.id, quantity: k.quantity })
         .then((response) => {
           setUser(response.data);
+          setTimeout(() => {
+            setIsAddBasketLoading(false);
+          }, 1000);
         })
         .catch((error) => {
           console.log(error);
@@ -80,9 +99,9 @@ export default function Home() {
             if (t.id === k.id) t.is_delete = !t.is_delete;
             return t;
           });
-  
+
           setProducts(editProducts);
-        }, 2000)
+        }, 2000);
       })
       .catch((error) => {
         console.log(error);
@@ -127,6 +146,9 @@ export default function Home() {
         {isDeletedLoading && "işleminiz yapılıyor"}
       </div>
       <div className="text-black">
+        {isAddBasketLoading && "ürün sepete ekleniyor lütfen bekleyiniz..."}
+      </div>
+      <div className="text-black">
         {products
           .filter((k: any) => k.is_delete === isDeleted)
           .map((k: any, index: number) => {
@@ -137,17 +159,28 @@ export default function Home() {
                   type="number"
                   placeholder="quantity"
                   onChange={(e: any) => (k.quantity = e.target.value)}
-                  className="text-black border border-gray-600"
+                  className="text-black border border-gray-600 rounded ml-3"
                 />
-                <button onClick={() => handleAddProduct(k)} className="m-1">
-                  ekle
+                <button
+                  onClick={() => handleAddBasketProduct(k)}
+                  className="m-1 border border-red-300 rounded px-2"
+                >
+                  sepete ekle
                 </button>
-                <button onClick={() => handleDeleteProduct(k)} className="m-1">
+                <button
+                  onClick={() => handleDeleteProduct(k)}
+                  className="m-1 border border-red-300 rounded px-2"
+                >
                   {isDeleted ? "arşivden çıkart" : "arşive gönder"}
                 </button>
               </div>
             );
           })}
+      </div>
+      <div className="text-black">
+      {movements.map((k: any, index: number) => {
+        return <div key={index}>{k.product.title} {k.quantity} {k.amount}</div>
+      })}
       </div>
     </main>
   );

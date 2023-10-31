@@ -13,7 +13,7 @@ export class Product {
     @Column()
     seo: string
 
-    @Column('decimal', { precision: 6, scale: 2 })
+    @Column('decimal', { precision: 6, scale: 2 }) // 1234.56
     price!: number
 
     @Column('decimal', { precision: 6, scale: 2 })

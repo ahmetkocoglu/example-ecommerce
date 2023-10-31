@@ -47,4 +47,9 @@ export const Routes = [{
     route: "/add-movement",
     controller: MovementController,
     action: "addMovement"
+}, {
+    method: "get",
+    route: "/movements",
+    controller: MovementController,
+    action: "all"
 }]

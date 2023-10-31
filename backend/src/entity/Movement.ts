@@ -1,5 +1,7 @@
 import { title } from "process"
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm"
+import { User } from "./User"
+import { Product } from "./Product"
 
 @Entity()
 export class Movement {
@@ -9,12 +11,6 @@ export class Movement {
 
     @Column()
     payment: boolean
-
-    @Column()
-    user_id: number
-
-    @Column()
-    product_id: number
 
     @Column('decimal', { precision: 6, scale: 2 })
     price: number
@@ -27,4 +23,12 @@ export class Movement {
 
     @Column()
     is_delete: boolean
+
+    @OneToOne(() => User, (user) => user.id)
+    @JoinColumn()
+    user: User
+
+    @OneToOne(() => Product, (product) => product.id)
+    @JoinColumn()
+    product: Product
 }
