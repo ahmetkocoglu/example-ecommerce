@@ -1,6 +1,7 @@
 import { MovementController } from "./controller/MovementController"
 import { ProductController } from "./controller/ProductController"
 import { UserController } from "./controller/UserController"
+import { AddressController } from "./controller/AddressController"
 
 export const Routes = [{
     method: "get",
@@ -62,4 +63,9 @@ export const Routes = [{
     route: "/movements",
     controller: MovementController,
     action: "all"
+}, {
+    method: "post",
+    route: "/address",
+    controller: AddressController,
+    action: "save"
 }]
