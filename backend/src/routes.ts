@@ -68,4 +68,9 @@ export const Routes = [{
     route: "/address",
     controller: AddressController,
     action: "save"
+}, {
+    method: "put",
+    route: "/address",
+    controller: AddressController,
+    action: "update"
 }]

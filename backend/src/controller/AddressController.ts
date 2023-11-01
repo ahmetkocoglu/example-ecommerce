@@ -28,4 +28,22 @@ export class AddressController {
 
         return this.addressRepository.save(address)
     }
+    async update(request: Request, response: Response, next: NextFunction) {
+        const { line, post_code, district, city, country }: Address = request.body;
+
+        const isLogin: any = jwt.verify(request.headers.authorization.replace('Bearer ', ''), "secret");
+        const user = await this.userRepository.findOne({
+            where: { id: isLogin.id }
+        })
+
+        return this.addressRepository.update({
+            user
+        }, {
+            line: line,
+            post_code: post_code,
+            district: district,
+            city: city,
+            country: country,
+        })
+    }
 }
