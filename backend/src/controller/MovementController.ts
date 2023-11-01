@@ -69,11 +69,26 @@ export class MovementController {
         })
 
         if (movementRow) {
-            return this.movementRepository.delete({
-                id: movementId, user: user
+            return this.movementRepository.update({
+                id: movementId, user: user, is_delete: false
+            }, {
+                is_delete: true
             })
         } else {
             return false;
         }
+    }
+
+    async payment(request: Request, response: Response, next: NextFunction) {
+        const isLogin: any = jwt.verify(request.headers.authorization.replace('Bearer ', ''), "secret");
+        const user = await this.userRepository.findOne({
+            where: { id: isLogin.id }
+        })
+
+        return this.movementRepository.update({
+            user: user, payment: false, is_delete: false
+        }, {
+            payment: true
+        })
     }
 }
