@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express"
 import { Movement } from "../entity/Movement"
 import { Product } from "../entity/Product"
 import { User } from "../entity/User"
+import jwt = require('jsonwebtoken');
 
 export class MovementController {
     private movementRepository = AppDataSource.getRepository(Movement)
@@ -18,13 +19,16 @@ export class MovementController {
             product_id,
             quantity
         } = request.body;
-
+        console.log(request.body);
+        
         const product = await this.productRepository.findOne({
             where: { id: product_id }
         })
 
+        const isLogin: any = jwt.verify(request.headers.authorization.replace('Bearer ', ''), "secret");
+
         const user = await this.userRepository.findOne({
-            where: { id: 1 }
+            where: { id: isLogin.id }
         })
 
         const movementRow = await this.movementRepository.findOne({

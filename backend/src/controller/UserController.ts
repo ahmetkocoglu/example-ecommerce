@@ -59,7 +59,7 @@ export class UserController {
         })
 
         const token = jwt.sign({
-            exp: Math.floor(Date.now() / 1000) + 60, 
+            exp: Math.floor(Date.now() / 1000) + 60 * 60, 
             data: user,
         }, "secret")
 
@@ -71,7 +71,7 @@ export class UserController {
 
     async me(request: Request, response: Response, next: NextFunction) {        
         try {
-            const isLogin: any = jwt.verify(request.headers.authorization, "secret");
+            const isLogin: any = jwt.verify(request.headers.authorization.replace('Bearer ', ''), "secret");
 
             const email = isLogin.data.email;
 

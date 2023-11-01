@@ -1,5 +1,5 @@
 import { title } from "process"
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from "typeorm"
 import { User } from "./User"
 import { Product } from "./Product"
 
@@ -24,11 +24,11 @@ export class Movement {
     @Column()
     is_delete: boolean
 
-    @OneToOne(() => User, (user) => user.id)
+    @ManyToOne(() => User, (user) => user.id)
     @JoinColumn()
     user: User
 
-    @OneToOne(() => Product, (product) => product.id)
+    @ManyToOne(() => Product, (product) => product.id)
     @JoinColumn()
     product: Product
 }
