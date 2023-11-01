@@ -11,16 +11,16 @@ export class MovementController {
     private userRepository = AppDataSource.getRepository(User)
 
     async all(request: Request, response: Response, next: NextFunction) {
-        return this.movementRepository.find({relations: {product: true, user: true}})
+        return this.movementRepository.find({ relations: { product: true, user: true } })
     }
-    
+
     async addMovement(request: Request, response: Response, next: NextFunction) {
         const {
             product_id,
             quantity
         } = request.body;
         console.log(request.body);
-        
+
         const product = await this.productRepository.findOne({
             where: { id: product_id }
         })
@@ -58,7 +58,22 @@ export class MovementController {
     }
 
     async deleteMovement(request: Request, response: Response, next: NextFunction) {
-        console.log('delete');
-        return "";
+        const movementId = Number(request.params.id);
+        const isLogin: any = jwt.verify(request.headers.authorization.replace('Bearer ', ''), "secret");
+        const user = await this.userRepository.findOne({
+            where: { id: isLogin.id }
+        })
+
+        const movementRow = await this.movementRepository.findOne({
+            where: { id: movementId, user: user }
+        })
+
+        if (movementRow) {
+            return this.movementRepository.delete({
+                id: movementId, user: user
+            })
+        } else {
+            return false;
+        }
     }
 }
